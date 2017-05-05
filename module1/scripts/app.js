@@ -13,8 +13,8 @@
 
       if (items) {
         //parse da entrada
-        // var re = /\s*,\s*/; //versão simples (aceita itens vazios)
-        var re = /\s*[,|\s]*,[,|\s]*\s*/; //opção que já ignora os itens vazios na hora do split (falha em alguns casos)
+        var re = /\s*,\s*/; //versão simples (aceita itens vazios)
+        // var re = /\s*[,|\s]*,[,|\s]*\s*/; //opção que já ignora os itens vazios na hora do split (falha em alguns casos)
         var itemsList = items.split(re);
         console.log(itemsList);
 
