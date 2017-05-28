@@ -5,6 +5,7 @@ angular.module('NarrowItDownApp', [])
   .controller('NarrowItDownController', NarrowItDownController)
   .service('MenuSearchService', MenuSearchService)
   .constant('ApiBasePath', "https://davids-restaurant.herokuapp.com")
+  .directive('foundItemsList', FoundItemsDirective)
 ;
 
 NarrowItDownController.$inject = ['MenuSearchService'];
@@ -14,11 +15,20 @@ function NarrowItDownController(MenuSearchService) {
   narrowItDown.foundItems = [];
 
   narrowItDown.search = function (searchTerm) {
-    var result = MenuSearchService.getMatchedMenuItems(searchTerm);
-    result.then(function (response) {
-      narrowItDown.foundItems = response;
-      console.log(narrowItDown.foundItems);
-    });
+    if (searchTerm) {
+      var result = MenuSearchService.getMatchedMenuItems(searchTerm);
+      result.then(function (response) {
+        narrowItDown.foundItems = response;
+        console.log(narrowItDown.foundItems);
+      });
+    }
+    else {
+      narrowItDown.foundItems = [];
+    }
+  };
+
+  narrowItDown.removeItem = function (itemIndex) {
+    narrowItDown.foundItems.splice(itemIndex, 1);
   };
 
 }
@@ -62,11 +72,11 @@ function FoundItemsDirective() {
   var ddo = {
     templateUrl: 'foundItems.html',
     scope: {
-      items: '<',
+      foundItems: '<',
       onRemove: '&'
     },
     controller: FoundItemsDirectiveController,
-    controllerAs: 'list',
+    controllerAs: 'directiveCtrl',
     bindToController: true
   };
 
@@ -74,10 +84,10 @@ function FoundItemsDirective() {
 }
 
 function FoundItemsDirectiveController() {
-  var list = this;
+  var directiveCtrl = this;
 
-  list.isEmpty = function () {
-    return false;
+  directiveCtrl.isEmpty = function () {
+    return directiveCtrl.foundItems.length == 0;
   };
 }
 
