@@ -24,10 +24,29 @@ function RoutesConfig($stateProvider, $urlRouterProvider) {
     controller: 'CategoriesController as categoriesController',
     resolve: {
       items: ['MenuDataService', function (MenuDataService) {
-        return MenuDataService.getAllCategories();
+        return MenuDataService.getAllCategories()
+          .then(function(response) {
+            return response.data;
+          });
       }]
     }
   })
+
+  .state('items', {
+    url: '/items/{categoryShortName}',
+    templateUrl: 'src/item.view.html',
+    controller: 'ItemController as itemCtrl',
+    resolve: {
+      item: ['$stateParams', 'MenuDataService',
+            function ($stateParams, MenuDataService) {
+              return MenuDataService.getItemsForCategory($stateParams.categoryShortName)
+                .then(function (response) {
+                  return response.data;
+                });
+            }]
+    }
+  })
+
   ;
 }
 
